@@ -6,6 +6,8 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+#include <iomanip>
+#include <string>
 
 #include "define.h"
 #include "struct.h"
