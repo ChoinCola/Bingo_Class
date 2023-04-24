@@ -22,17 +22,14 @@
     <ClInclude Include="AIuser.h" />
     <ClInclude Include="Bingobord.h" />
     <ClInclude Include="define.h" />
-    <ClInclude Include="fundtion.h" />
     <ClInclude Include="GameMaster.h" />
     <ClInclude Include="Hole.h" />
     <ClInclude Include="PlayerUser.h" />
     <ClInclude Include="ProjectHead.h" />
-    <ClInclude Include="struct.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIuser.cpp" />
     <ClCompile Include="Bingobord.cpp" />
-    <ClCompile Include="function.cpp" />
     <ClCompile Include="GameMaster.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PlayerUser.cpp" />

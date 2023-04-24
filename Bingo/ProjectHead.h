@@ -10,7 +10,6 @@
 #include <string>
 
 #include "define.h"
-#include "struct.h"
 #include "fundtion.h"
 #include "GameMaster.h"
 #include "PlayerUser.h"

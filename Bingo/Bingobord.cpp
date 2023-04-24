@@ -4,7 +4,6 @@ Bingobord::Bingobord()
 {
 	bord_size = WIDTHLENGTH;
 	list_size = 0;
-	bord_now = 0;
 }
 auto Make_bord(int bord_size) -> std::vector<Hole>
 {
@@ -26,36 +25,39 @@ auto Make_bord(int bord_size) -> std::vector<Hole>
 		bord[i].now = false;
 	}
 
-	delete &defnum; // 임시배열 날림
+	//delete &defnum; // 임시배열 날림
 
 	return bord;
 }
 
-auto Input_pin(int userpin, std::vector<Hole>& bord) -> void
+auto Input_pin(int userpin, std::vector<Hole>& bord, int bord_size) -> bool
 {
-	for (int i = 0; i < sizeof(bord) / sizeof(bord[0]); i++) { // bord 전체순환.
+	for (int i = 0; i < bord_size * bord_size; i++) { // bord 전체순환.
 		if (bord[i].number == userpin) {
-			bord[i].now = true;
-			return;
+			if (bord[i].now == false) {
+				bord[i].now = true;
+				return 0;
+			}
+			else
+				return 1;
 		}
 	}
 	assert("맞는 핀번호를 찾을 수 없습니다. 디버깅오류!!!!");
 }
 
-auto Bingobord::Chack_bord(int&& userpin, std::string&& username, int&& bord_size) -> int
+auto Bingobord::Chack_bord(int&& userpin) -> bool
 {
-	int count;
-	for(count = 0 ; count < list_size; count++ )
-		if (this->blist[count].username == username) { // 유저 이름에 해당하는 blist를 찾았을 경우,
-			Input_pin(userpin, blist[count].bord); // 보드의 숫자 위치에 핀을 꽃는다.
-			bord_now = count;
-			return count;
-		}
+	bool result;
+	for(int count = 0 ; count < list_size; count++ ) {
+		result = Input_pin(userpin, blist[count].bord, bord_size); // 보드의 숫자 위치에 핀을 꽃는다. 모든 보드를 순회하여 찍음.
+	}
+	return result;
+}
 
+auto Bingobord::Creat_Bord(std::string username) -> void
+{
 	blist.push_back(BoNa{ Make_bord(bord_size), username }); // 맞는이름이 없을 경우 새로운 보드판을 생성한다.
 	list_size++; // 사이즈 업!
-	bord_now = -1;
-	return -1;
 }
 
 auto Bingobord::Get_Mybord(std::string& username) -> std::vector<Hole>
@@ -72,19 +74,22 @@ auto Bingobord::Get_Mybord(std::string& username) -> std::vector<Hole>
 auto Bingobord::Print_Allbord() -> void
 {
 	for (int i = 0; i < list_size; i++) {
-		std::cout << std::setw(bord_size * 5 - 1) << blist[i].username; // 이름출력
+		std::cout << std::setw(bord_size * 2) << std::setfill(' ') << std::right << std::string(bord_size * 2 - blist[i].username.length(), ' ') 
+			<< blist[i].username << std::string(bord_size * 2 + 2 - blist[i].username.length(), ' '); // 이름 출력
 	}
 	std::cout << std::endl;
 	for (int j = 0; j < bord_size; j++) { // 한줄 씩 출력
 		for (int i = 0; i < list_size; i++) { // 보드 개수 조건참조
 			for (int k = 0; k < bord_size; k++) { // 해당 줄의 해당보드위치
-				if (blist[i].bord[(j * bord_size) + k].now = true)
-					printf("[//] ");
+				if (blist[i].bord[(j * bord_size) + k].now == true)
+					printf("[■]");
 				else
-					std::cout << std::setw(4) << std::left << "[" <<
-					std::right << blist[i].bord[(j * bord_size) + k].number << "] ";
+					std::cout << (blist[i].bord[(j * bord_size) + k].number < 10 ? std::setw(2) : std::setw(0)) << std::left << "[" <<
+					std::right << blist[i].bord[(j * bord_size) + k].number << "]";
 			}
+			printf("  ");
 		}
+		printf("\n");
 	}
 }
 
@@ -94,5 +99,5 @@ Bingobord::~Bingobord()
 		delete& blist[i].bord; 
 	}
 	list_size = 0;
-	delete& blist;
+	delete& blist; 
 }

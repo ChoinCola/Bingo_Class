@@ -27,7 +27,7 @@ auto Victory_contdition(std::vector<Hole> point, int widthlength) -> int
 
 		for (int j = 0; j < widthlength; j++) {
 			chack_length += !point[i * widthlength + j].now;
-			chack_width += !point[i * widthlength + j].now;
+			chack_width += !point[j * widthlength + i].now;
 		}
 		if (chack_length == 0) bingo_count++;
 		if (chack_width == 0) bingo_count++;
@@ -41,13 +41,13 @@ auto Victory_contdition(std::vector<Hole> point, int widthlength) -> int
 	return bingo_count;
 }
 
-auto GameMaster::Chack_Winner(std::vector<Hole> point, std::string username) -> void
+auto GameMaster::Chack_Winner(std::vector<Hole> point, std::string username) -> bool
 {
 	int defc = Victory_contdition(point, this->widthlength);
 
 	if (defc >= how_many_bingo) {
-		std::cout << username << " 가 승리하였 습니다." << std::endl;
-		exit(0);
+		std::cout << username << " 가 승리 하였습니다." << std::endl;
+		return 1;
 	}
-	std::cout << username << " 의 빙고 : " << defc << "/" << how_many_bingo << std::endl;
+	return 0;
 }

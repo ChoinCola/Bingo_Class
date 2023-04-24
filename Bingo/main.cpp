@@ -80,26 +80,56 @@
 	}
 
 */
+
 int main()
 {
-	int list[WIDTHLENGTH][WIDTHLENGTH] = { NULL };
-	int data, chack = 0;
+	int user_count;
+	PlayerUser player;
+	Bingobord Game_bord;
+	GameMaster Game_Master;
 
-	Random_input(list[0], WIDTHLENGTH);
+	std::string Player_name;
+	player.Set_name(); // 유저의 이름 입력.
+	Game_bord.Creat_Bord(player.username); // 이름대로 보드 생성
 
-	while (chack != 1) {
-		system("cls");
-		Print_Bingo(list[0], WIDTHLENGTH);
-		printf("체크하려는 칸을 입력해 주세요! : ");
-		scanf_s("%d", &data);
-		User_input(list[0], WIDTHLENGTH, data);
-		chack = Bingo_chack(list[0], WIDTHLENGTH, HOW_M_BINGO);
+	std::cout << "같이 플레이 할 AI의 수를 입력해주세요 : ";
+	std::cin >> user_count;
+	std::cin.ignore();
+	std::vector<AIuser> AI(user_count); // AI 수 입력
+
+	for (int i = 0; i < user_count; i++) {// AI의 개수 만큼 이름을 지정해준다.
+		std::cout << i + 1 << "번째 AI의 이름 입니다." << std::endl;
+		AI[i].Set_name();
+		Game_bord.Creat_Bord(AI[i].username); // 이름대로 보드 생성
 	}
-	if (chack == 1) {
+
+	// 게임준비 완료
+	Sleep(1000);
+	system("cls");
+	printf("게임을 시작합니다!\n");
+	Sleep(1000);
+	system("cls");
+	while (true) {
+		
+		Game_bord.Print_Allbord();
+		while (Game_bord.Chack_bord(player.UsePin())) {}
+
+		Game_Master.Chack_Winner(Game_bord.Get_Mybord(player.username), player.username); // 게임 마스터가 승리여부를 판별함.
+		Sleep(1000);
+		for (int i = 0; i < user_count; i++) {
+			Game_bord.Chack_bord(AI[i].Victory_contdition(Game_bord.Get_Mybord(AI[i].username))); // AI가 자신의 보드를 가져와서 최선의 핀 위치를 공략함.
+
+			if (Game_Master.Chack_Winner(Game_bord.Get_Mybord(player.username), player.username)) {
+				Game_bord.Print_Allbord();// 게임 마스터가 승리여부를 판별함.
+				exit(0);
+			}
+			else if (Game_Master.Chack_Winner(Game_bord.Get_Mybord(AI[i].username), AI[i].username)) {
+				Game_bord.Print_Allbord();// 게임 마스터가 승리여부를 판별함.
+				exit(0);
+			}
+
+			Sleep(1000);
+		}
 		system("cls");
-		Print_Bingo(list[0], WIDTHLENGTH);
-		printf("성공하셨습니다 축하드립니다!\n");
 	}
-	return 0;
 }
-
